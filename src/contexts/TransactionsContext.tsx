@@ -32,8 +32,15 @@ export const TransactionsProvider: React.FC<TransactionProviderProps> = ({
 	const [transactions, setTransactions] = useState<Transaction[]>([]);
 	// const [isLoading, setIsLoading] = useState(true);
 
-	async function createTransaction(transaction: TransactionInput) {
-		await api.post('/transactions', transaction);
+	async function createTransaction(transactionInput: TransactionInput) {
+		const response = await api.post('/transactions', {
+			...transactionInput,
+			createdAt: new Date(),
+		});
+
+		const { transaction } = response.data;
+
+		setTransactions(oldstate => [...oldstate, transaction]);
 	}
 
 	useEffect(() => {
